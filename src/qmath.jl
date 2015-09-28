@@ -42,7 +42,7 @@ function sqrt(q::Quaternion)
     return exp(0.5*log(q))
 end
 
-function (^)(q::Quaternion, p::FloatingPoint)
+function (^)(q::Quaternion, p::AbstractFloat)
     return exp(p*log(q))
 end
 

@@ -1,6 +1,7 @@
 VERSION >= v"0.4.0-dev+6521" && __precompile__()
 
 module Quaternions
+using Compat
 import Base: int, convert, promote_rule, show, real, imag, conj, abs, abs2, inv, rand, randn
 import Base: +, -, /, *, &, $, |
 import Base: inv, pinv, float
@@ -20,7 +21,7 @@ include("qmath.jl")
 
 Quaternion(q0::Real,q1::Real,q2::Real,q3::Real) = Quaternion(promote(q0,q1,q2,q3)...)
 Quaternion(x::Real) = Quaternion(x,zero(x),zero(x),zero(x))
-Quaternion(x::MathConst) = Quaternion(float(x))
+Quaternion(x::Irrational) = Quaternion(float(x))
 Quaternion(z::Complex) = Quaternion(real(z),imag(z),zero(real(z)),zero(real(z)))
 
 typealias Quaternion256 Quaternion{Float64}
@@ -140,6 +141,8 @@ perp(p, q::Quaternion) = 0.5*(p + q*p*q)
 
 rand{T<:Real}(::Type{Quaternion{T}}) = quaternion(rand(T),rand(T),rand(T),rand(T))
 randn{T<:Real}(::Type{Quaternion{T}}) = quaternion(randn(),randn(),randn(),randn())
+rand{T<:Real}(r::AbstractRNG, ::Type{Quaternion{T}}) = quaternion(rand(r, T), rand(r, T), rand(r, T), rand(r, T))
+randn{T<:Real}(r::AbstractRNG, ::Type{Quaternion{T}}) = quaternion(randn(r), randn(r), randn(r), randn(r))
 
 const jm = Quaternion(false,false,true,false)
 const km = Quaternion(false,false,false,true)
