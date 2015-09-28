@@ -175,8 +175,8 @@ function equiv{T<:Real}(qmat::AbstractArray{Quaternion{T}})
 end
 
 function equiv{T<:Real}(cmat::AbstractArray{Complex{T}})
-    A = cmat[1:end/2,1:end/2]
-    B = cmat[1:end/2,end/2+1:end]
+    A = cmat[1:end>>1,1:end>>1]
+    B = cmat[1:end>>1,end>>1+1:end]
 
     return A+B*jm
 end
