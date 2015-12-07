@@ -39,7 +39,7 @@ function tanh(q::Quaternion)
 end
 
 function sqrt(q::Quaternion)
-    return exp(0.5*log(q))
+    return exp(log(q)/2)
 end
 
 function (^)(q::Quaternion, p::AbstractFloat)
@@ -73,6 +73,6 @@ function atan(q::Quaternion)
     y = abs(x)
     z = y!=zero(q.q0) ? x/y : quaternion(one(q.q0)*im)
 
-    return -0.5*z*log((one(q.q0)+z*q)/(one(q.q0)-z*q))
+    return -z*log((one(q.q0)+z*q)/(one(q.q0)-z*q))/2
 end
 
