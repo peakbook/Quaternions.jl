@@ -87,7 +87,7 @@ for (f,t) in ((:quaternion64, Quaternion64),
 end
 
 quaternion{T<:Quaternion}(x::AbstractArray{T}) = x
-quaternion(x::AbstractArray) = copy!(similar(x,typeof(quaternion(one(eltype(x))))), x)
+quaternion(x::AbstractArray) = convert(AbstractArray{Quaternion{eltype(x)}}, x)
 
 real(z::Quaternion) = z.q0
 imagi(z::Quaternion) = z.q1
