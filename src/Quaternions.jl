@@ -30,10 +30,8 @@ typealias Quaternion64 Quaternion{Float16}
 
 convert(::Type{Quaternion}, x::Real) = Quaternion(x)
 convert(::Type{Quaternion}, z::Complex) = Quaternion(z)
-convert(::Type{Quaternion}, z::Complex{Bool}) = Quaternion(real(z)+z)
-convert{T<:Real}(::Type{Quaternion{T}}, x::Real) = Quaternion(x)
-convert{T<:Real}(::Type{Quaternion{T}}, z::Complex) = Quaternion(z)
-convert{T<:Real}(::Type{Quaternion{T}}, z::Complex{Bool}) = Quaternion(real(z)+z)
+convert{T<:Real}(::Type{Quaternion{T}}, x::Real) = Quaternion(convert(T,x))
+convert{T<:Real}(::Type{Quaternion{T}}, z::Complex) = Quaternion(convert(Complex{T},z))
 convert{T<:Real}(::Type{Quaternion{T}}, q::Quaternion) = Quaternion{T}(convert(T,q.q0), convert(T,q.q1), convert(T,q.q2), convert(T,q.q3))
 convert{T<:Real}(::Type{Quaternion{T}}, q::Quaternion{T}) = q
 convert{T<:Real}(::Type{T}, q::Quaternion) = (q.q1==0 && q.q2 == 0 && q.q3 == 0 ? convert(T,q.q0) : throw(InexactError()))
@@ -87,7 +85,8 @@ for (f,t) in ((:quaternion64, Quaternion64),
 end
 
 quaternion{T<:Quaternion}(x::AbstractArray{T}) = x
-quaternion(x::AbstractArray) = convert(AbstractArray{Quaternion{eltype(x)}}, x)
+quaternion{T<:Complex}(x::AbstractArray{T}) = copy!(similar(x, Quaternion{real(eltype(x))}), x)
+quaternion{T<:Real}(x::AbstractArray{T}) = copy!(similar(x, Quaternion{eltype(x)}), x)
 
 real(z::Quaternion) = z.q0
 imagi(z::Quaternion) = z.q1
@@ -136,8 +135,8 @@ antiwedge(p::Quaternion,q::Quaternion) = (p*q+q*p)/2
 ($)(z1::Quaternion, z2::Quaternion) = wedge(z1,z2)
 (|)(z1::Quaternion, z2::Quaternion) = antiwedge(z1,z2)
 
-para(p, q::Quaternion) = 0.5*(p - q*p*q)
-perp(p, q::Quaternion) = 0.5*(p + q*p*q)
+para(p, q::Quaternion) = (p - q*p*q)/2
+perp(p, q::Quaternion) = (p + q*p*q)/2
 
 rand{T<:Real}(::Type{Quaternion{T}}) = quaternion(rand(T),rand(T),rand(T),rand(T))
 randn{T<:Real}(::Type{Quaternion{T}}) = quaternion(randn(),randn(),randn(),randn())
