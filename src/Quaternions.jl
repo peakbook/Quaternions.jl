@@ -143,6 +143,10 @@ randn{T<:Real}(::Type{Quaternion{T}}) = quaternion(randn(),randn(),randn(),randn
 rand{T<:Real}(r::AbstractRNG, ::Type{Quaternion{T}}) = quaternion(rand(r, T), rand(r, T), rand(r, T), rand(r, T))
 randn{T<:Real}(r::AbstractRNG, ::Type{Quaternion{T}}) = quaternion(randn(r), randn(r), randn(r), randn(r))
 
+real{T<:Real}(::Type{Quaternion{T}}) = T
+quaternion{T<:Real}(::Type{T}) = Quaternion{T}
+quaternion{T<:Real}(::Type{Quaternion{T}}) = Quaternion{T}
+
 const jm = Quaternion(false,false,true,false)
 const km = Quaternion(false,false,false,true)
 
