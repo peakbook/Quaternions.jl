@@ -1,6 +1,6 @@
 import Base: exp, log, sqrt, ^
 import Base: cos, sin, tan, cosh, sinh, tanh, acos, asin, atan, acosh, asinh, atanh
-# exp
+
 function exp(q::Quaternion)
     z = sqrt(q.q1*q.q1 + q.q2*q.q2 + q.q3*q.q3)
     return exp(q.q0)*(cos(z) + imag(q)*(z != zero(q.q0) ? sin(z)/z : one(q.q0)))
@@ -8,8 +8,8 @@ end
 
 function log(q::Quaternion)
     z = abs(imag(q))
-    return log(abs(q)) + ((imag(q)!=zero(typeof(q))) ? imag(q)/z*atan2(z,q.q0) :
-    q.q0 < zero(typeof(q.q0)) ? quaternion(pi*im) : zero(typeof(q)))
+    return log(abs(q)) + ((imag(q)!=zero(q)) ? imag(q)/z*atan2(z,q.q0) :
+    q.q0 < zero(q.q0) ? quaternion(pi*im) : zero(q))
 end
 
 function cos(q::Quaternion)

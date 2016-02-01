@@ -34,7 +34,7 @@ convert{T<:Real}(::Type{Quaternion{T}}, x::Real) = Quaternion(convert(T,x))
 convert{T<:Real}(::Type{Quaternion{T}}, z::Complex) = Quaternion(convert(Complex{T},z))
 convert{T<:Real}(::Type{Quaternion{T}}, q::Quaternion) = Quaternion{T}(convert(T,q.q0), convert(T,q.q1), convert(T,q.q2), convert(T,q.q3))
 convert{T<:Real}(::Type{Quaternion{T}}, q::Quaternion{T}) = q
-convert{T<:Real}(::Type{T}, q::Quaternion) = (q.q1==0 && q.q2 == 0 && q.q3 == 0 ? convert(T,q.q0) : throw(InexactError()))
+convert{T<:Real}(::Type{T}, q::Quaternion) = (q.q1 == zero(q.q1) && q.q2 == zero(q.q1) && q.q3 == zero(q.q1) ? convert(T,q.q0) : throw(InexactError()))
 
 promote_rule{T<:Real}(::Type{Quaternion{T}}, ::Type{T}) = Quaternion{T}
 promote_rule{T<:Real}(::Type{Quaternion}, ::Type{T}) = Quaternion
@@ -64,7 +64,7 @@ for fn in (:int,:integer,:signed,:int8,:int16,:int32,:int64,:int128,
 end
 
 function show(io::IO, z::Quaternion)
-    pm(z) = z < 0 ? " - $(-z)" : " + $z"
+    pm(z) = z < zero(z) ? " - $(-z)" : " + $z"
     print(io, z.q0, pm(z.q1), "i", pm(z.q2), "j", pm(z.q3), "k")
 end
 
