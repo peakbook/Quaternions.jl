@@ -150,38 +150,54 @@ quaternion{T<:Real}(::Type{Quaternion{T}}) = Quaternion{T}
 const jm = Quaternion(false,false,true,false)
 const km = Quaternion(false,false,false,true)
 
-function q2c{T<:Real}(q::Quaternion{T})
-    return complex(real(q),imagi(q))
+function equiv!{T<:Real}(Y::AbstractArray{Complex{T}}, X::AbstractArray{Quaternion{T}})
+    @assert size(X,1)<<1 == size(Y,1)
+    @assert size(X,2)<<1 == size(Y,2)
+
+    dtype = real(eltype(X))
+    M = size(X,1)
+    N = size(X,2)
+    Xr = reinterpret(dtype, X, (M<<2,N))
+    Yr = reinterpret(dtype, Y, (M<<2,N<<1))
+
+    Yr[1:2:end>>1,1:end>>1] = Xr[1:4:end,:]
+    Yr[2:2:end>>1,1:end>>1] = Xr[2:4:end,:]
+    Yr[1+end>>1:2:end,1+end>>1:end] = Xr[1:4:end,:]
+    Yr[2+end>>1:2:end,1+end>>1:end] = -Xr[2:4:end,:]
+    Yr[1:2:end>>1,1+end>>1:end] = Xr[3:4:end,:]
+    Yr[2:2:end>>1,1+end>>1:end] = Xr[4:4:end,:]
+    Yr[1+end>>1:2:end,1:end>>1] = -Xr[3:4:end,:]
+    Yr[2+end>>1:2:end,1:end>>1] = Xr[4:4:end,:]
+
+    return Y
 end
 
-function q2cj{T<:Real}(q::Quaternion{T})
-    return complex(imagj(q),imagk(q))
+function equiv{T<:Quaternion}(X::AbstractArray{T})
+    Y = Array(Complex{real(eltype(X))}, (size(X,1)<<1, size(X,2)<<1))
+    return equiv!(Y, X)
 end
 
-function c2q{T<:Real}(q1::Complex{T},q2::Complex{T})
-    return quaternion(real(q1),imag(q1),real(q2),imag(q2))
+function equiv!{T<:Real}(Y::AbstractArray{Quaternion{T}}, X::AbstractArray{Complex{T}})
+    @assert size(X,1)>>1 == size(Y,1)
+    @assert size(X,2)>>1 == size(Y,2)
+
+    dtype = real(eltype(X))
+    M = size(X,1)
+    N = size(X,2)
+    Xr = reinterpret(dtype, X, (M<<1,N))
+    Yr = reinterpret(dtype, Y, (M<<1,N>>1))
+
+    Yr[1:4:end,:] = Xr[1:2:end>>1,1:end>>1] 
+    Yr[2:4:end,:] = Xr[2:2:end>>1,1:end>>1] 
+    Yr[3:4:end,:] = Xr[1:2:end>>1,1+end>>1:end] 
+    Yr[4:4:end,:] = Xr[2:2:end>>1,1+end>>1:end] 
+
+    return Y
 end
 
-for fn in (:q2c,:q2cj)
-    @eval begin
-        ($fn)(A::AbstractArray) = map(($fn),A)
-    end
-end
-
-c2q(A::AbstractArray, B::AbstractArray) = map(c2q,A,B)
-
-function equiv{T<:Real}(qmat::AbstractArray{Quaternion{T}})
-    A = q2c(qmat)
-    B = q2cj(qmat)
-
-    return hcat(vcat(A,-conj(B)),vcat(B,conj(A)))
-end
-
-function equiv{T<:Real}(cmat::AbstractArray{Complex{T}})
-    A = cmat[1:end>>1,1:end>>1]
-    B = cmat[1:end>>1,end>>1+1:end]
-
-    return A+B*jm
+function equiv{T<:Complex}(X::AbstractArray{T})
+    Y = Array(Quaternion{real(eltype(X))}, (size(X,1)>>1, size(X,2)>>1))
+    return equiv!(Y, X)
 end
 
 for fn in (:pinv, :inv)
