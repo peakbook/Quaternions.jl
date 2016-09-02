@@ -1,8 +1,8 @@
-VERSION >= v"0.4.0-dev+6521" && __precompile__()
+isdefined(Base, :__precompile__) && __precompile__()
 
 module Quaternions
 using Compat
-import Base: int, convert, promote_rule, show, real, imag, conj, abs, abs2, inv, rand, randn
+import Base: convert, promote_rule, show, real, imag, conj, abs, abs2, inv, rand, randn
 import Base: +, -, /, *, &, $, |
 import Base: inv, pinv, float
 
@@ -49,20 +49,6 @@ quaternion(x) = Quaternion(x)
 quaternion(z::Complex) = Quaternion(z)
 quaternion(q::Quaternion) = q 
 
-quaternion256(q0::Float64,q1::Float64,q2::Float64,q3::Float64) = Quaternion{Float64}(q0,q1,q2,q3)
-quaternion256(q0::Real,q1::Real,q2::Real,q3::Real) = quaternion256(float64(q0),float64(q1),float64(q2),float64(q3))
-quaternion128(q0::Float32,q1::Float32,q2::Float32,q3::Float32) = Quaternion{Float32}(q0,q1,q2,q3)
-quaternion128(q0::Real,q1::Real,q2::Real,q3::Real) = quaternion128(float32(q0),float32(q1),float32(q2),float32(q3))
-quaternion64(q0::Float16,q1::Float16,q2::Float16,q3::Float16) = Quaternion{Float16}(q0,q1,q2,q3)
-quaternion64(q0::Real,q1::Real,q2::Real,q3::Real) = quaternion64(float16(q0),float16(q1),float16(q2),float16(q3))
-
-#for fn in _numeric_conversion_func_names
-for fn in (:int,:integer,:signed,:int8,:int16,:int32,:int64,:int128,
-    :uint,:unsigned,:uint8,:uint16,:uint32,:uint64,:uint128,
-    :float,:float16,:float32,:float64)
-    @eval $fn(q::Quaternion) = Quaternion($fn(q.q0),$fn(q.q1),$fn(q.q2),$fn(q.q3))
-end
-
 function show(io::IO, z::Quaternion)
     pm(z) = z < zero(z) ? " - $(-z)" : " + $z"
     print(io, z.q0, pm(z.q1), "i", pm(z.q2), "j", pm(z.q3), "k")
@@ -75,13 +61,6 @@ function quaternion{S<:Real,T<:Real,U<:Real,V<:Real}(A::Array{S}, B::Array{T}, C
         @inbounds F[i] = quaternion(A[i], B[i], C[i], D[i])
     end
     return F
-end
-
-for (f,t) in ((:quaternion64, Quaternion64),
-    (:quaternion128, Quaternion128),
-    (:quaternion256, Quaternion256))
-    @eval ($f)(x::AbstractArray{$t}) = x
-    @eval ($f)(x::AbstractArray) = copy!(similar(x,$t), x)
 end
 
 quaternion{T<:Quaternion}(x::AbstractArray{T}) = x
