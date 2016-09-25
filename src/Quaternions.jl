@@ -1,7 +1,6 @@
-isdefined(Base, :__precompile__) && __precompile__()
+__precompile__()
 
 module Quaternions
-using Compat
 import Base: convert, promote_rule, show, real, imag, conj, abs, abs2, inv, rand, randn
 import Base: +, -, /, *, &, $, |
 import Base: inv, pinv, float
