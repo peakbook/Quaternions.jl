@@ -1,6 +1,7 @@
 __precompile__()
 
 module Quaternions
+using Compat
 import Base: convert, promote_rule, show, real, imag, conj, abs, abs2, inv, rand, randn
 import Base: +, -, /, *, &, $, |
 import Base: inv, pinv, float
@@ -23,9 +24,9 @@ Quaternion(x::Real) = Quaternion(x,zero(x),zero(x),zero(x))
 Quaternion(x::Irrational) = Quaternion(float(x))
 Quaternion(z::Complex) = Quaternion(real(z),imag(z),zero(real(z)),zero(real(z)))
 
-typealias Quaternion256 Quaternion{Float64}
-typealias Quaternion128 Quaternion{Float32}
-typealias Quaternion64 Quaternion{Float16}
+@compat const Quaternion256 = Quaternion{Float64}
+@compat const Quaternion128 = Quaternion{Float32}
+@compat const Quaternion64 = Quaternion{Float16}
 
 convert(::Type{Quaternion}, x::Real) = Quaternion(x)
 convert(::Type{Quaternion}, z::Complex) = Quaternion(z)
