@@ -4,8 +4,9 @@ module Quaternions
 using Compat
 import Base: convert, promote_rule, show, real, imag, conj, abs, abs2, inv, rand, randn
 import Base: +, -, /, *, &, $, |
-import Base: inv, pinv, float
+import Base: inv, float
 import Random: AbstractRNG
+import LinearAlgebra: pinv
 
 export Quaternion, Quaternion256, Quaternion128, Quaternion64
 export quaternion, imagi, imagj, imagk, jm, km
