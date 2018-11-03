@@ -87,33 +87,33 @@ for fn in (:imagi,:imagj,:imagk)
     end
 end
 
-conj(z::Quaternion) = Quaternion(z.q0, -z.q1, -z.q2, -z.q3)
-abs(z::Quaternion) = sqrt(z.q0*z.q0 + z.q1*z.q1 + z.q2*z.q2 + z.q3*z.q3)
-abs2(z::Quaternion) = z.q0*z.q0 + z.q1*z.q1 + z.q2*z.q2 + z.q3*z.q3
-inv(z::Quaternion) = conj(z)/abs2(z)
+conj(z::Quaternion)::Quaternion = Quaternion(z.q0, -z.q1, -z.q2, -z.q3)
+abs(z::Quaternion)::Quaternion = sqrt(z.q0*z.q0 + z.q1*z.q1 + z.q2*z.q2 + z.q3*z.q3)
+abs2(z::Quaternion)::Quaternion = z.q0*z.q0 + z.q1*z.q1 + z.q2*z.q2 + z.q3*z.q3
+inv(z::Quaternion)::Quaternion = conj(z)/abs2(z)
 
-(-)(z::Quaternion) = Quaternion(-z.q0, -z.q1, -z.q2, -z.q3)
-(/)(z::Quaternion, x::Real) = Quaternion(z.q0/x, z.q1/x, z.q2/x, z.q3/x)
-(+)(z::Quaternion, w::Quaternion) = Quaternion(z.q0 + w.q0, z.q1 + w.q1,
-                                               z.q2 + w.q2, z.q3 + w.q3)
-(-)(z::Quaternion, w::Quaternion) = Quaternion(z.q0 - w.q0, z.q1 - w.q1,
-                                               z.q2 - w.q2, z.q3 - w.q3)
-(*)(z::Quaternion, w::Quaternion) = Quaternion(z.q0*w.q0 - z.q1*w.q1 - z.q2*w.q2 - z.q3*w.q3,
-                                               z.q0*w.q1 + z.q1*w.q0 + z.q2*w.q3 - z.q3*w.q2,
-                                               z.q0*w.q2 - z.q1*w.q3 + z.q2*w.q0 + z.q3*w.q1,
-                                               z.q0*w.q3 + z.q1*w.q2 - z.q2*w.q1 + z.q3*w.q0)
+(-)(z::Quaternion)::Quaternion = Quaternion(-z.q0, -z.q1, -z.q2, -z.q3)
+(/)(z::Quaternion, x::Real)::Quaternion = Quaternion(z.q0/x, z.q1/x, z.q2/x, z.q3/x)
+(+)(z::Quaternion, w::Quaternion)::Quaternion = Quaternion(z.q0 + w.q0, z.q1 + w.q1,
+                                                           z.q2 + w.q2, z.q3 + w.q3)
+(-)(z::Quaternion, w::Quaternion)::Quaternion = Quaternion(z.q0 - w.q0, z.q1 - w.q1,
+                                                           z.q2 - w.q2, z.q3 - w.q3)
+(*)(z::Quaternion, w::Quaternion)::Quaternion = Quaternion(z.q0*w.q0 - z.q1*w.q1 - z.q2*w.q2 - z.q3*w.q3,
+                                                           z.q0*w.q1 + z.q1*w.q0 + z.q2*w.q3 - z.q3*w.q2,
+                                                           z.q0*w.q2 - z.q1*w.q3 + z.q2*w.q0 + z.q3*w.q1,
+                                                           z.q0*w.q3 + z.q1*w.q2 - z.q2*w.q1 + z.q3*w.q0)
 (/)(z::Quaternion, w::Quaternion) = z*inv(w)
 
 # element wise multiplication
-mul_ew(z1::Quaternion, z2::Quaternion) = Quaternion(z1.q0*z2.q0,z1.q1*z2.q1,z1.q2*z2.q2,z1.q3*z2.q3)
-(&)(z1::Quaternion, z2::Quaternion) = mul_ew(z1,z2)
-(&)(z::Quaternion, x::Real) = x*z
-(&)(z::Real, x::Quaternion) = x*z
+mul_ew(z1::Quaternion, z2::Quaternion)::Quaternion = Quaternion(z1.q0*z2.q0,z1.q1*z2.q1,z1.q2*z2.q2,z1.q3*z2.q3)
+(&)(z1::Quaternion, z2::Quaternion)::Quaternion = mul_ew(z1,z2)
+(&)(z::Quaternion, x::Real)::Quaternion = x*z
+(&)(z::Real, x::Quaternion)::Quaternion = x*z
 
-wedge(p::Quaternion,q::Quaternion) = (p*q-q*p)/2
-antiwedge(p::Quaternion,q::Quaternion) = (p*q+q*p)/2
-($)(z1::Quaternion, z2::Quaternion) = wedge(z1,z2)
-(|)(z1::Quaternion, z2::Quaternion) = antiwedge(z1,z2)
+wedge(p::Quaternion,q::Quaternion)::Quaternion = (p*q-q*p)/2
+antiwedge(p::Quaternion,q::Quaternion)::Quaternion = (p*q+q*p)/2
+($)(z1::Quaternion, z2::Quaternion)::Quaternion = wedge(z1,z2)
+(|)(z1::Quaternion, z2::Quaternion)::Quaternion = antiwedge(z1,z2)
 
 para(p, q::Quaternion) = (p - q*p*q)/2
 perp(p, q::Quaternion) = (p + q*p*q)/2
