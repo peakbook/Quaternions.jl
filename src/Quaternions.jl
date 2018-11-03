@@ -3,7 +3,7 @@ __precompile__()
 module Quaternions
 using Compat
 import Base: convert, promote_rule, show, real, imag, conj, abs, abs2, inv, rand, randn
-import Base: +, -, /, *, &, $, |
+import Base: +, -, /, *, &, ⊻, |
 import Base: inv, float
 import Random: AbstractRNG
 import LinearAlgebra: pinv
@@ -113,7 +113,7 @@ mul_ew(z1::Quaternion, z2::Quaternion)::Quaternion = Quaternion(z1.q0*z2.q0,z1.q
 
 wedge(p::Quaternion,q::Quaternion)::Quaternion = (p*q-q*p)/2
 antiwedge(p::Quaternion,q::Quaternion)::Quaternion = (p*q+q*p)/2
-($)(z1::Quaternion, z2::Quaternion)::Quaternion = wedge(z1,z2)
+(⊻)(z1::Quaternion, z2::Quaternion)::Quaternion = wedge(z1,z2)
 (|)(z1::Quaternion, z2::Quaternion)::Quaternion = antiwedge(z1,z2)
 
 para(p, q::Quaternion) = (p - q*p*q)/2
