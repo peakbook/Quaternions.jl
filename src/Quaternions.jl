@@ -127,6 +127,7 @@ real(::Type{Quaternion{T}}) where T<:Real = T
 quaternion(::Type{T}) where T<:Real = Quaternion{T}
 quaternion(::Type{Quaternion{T}}) where T<:Real = Quaternion{T}
 
+
 const jm = Quaternion(false,false,true,false)
 const km = Quaternion(false,false,false,true)
 
