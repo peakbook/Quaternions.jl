@@ -89,8 +89,8 @@ for fn in (:imagi,:imagj,:imagk)
 end
 
 conj(z::Quaternion)::Quaternion = Quaternion(z.q0, -z.q1, -z.q2, -z.q3)
-abs(z::Quaternion)::Quaternion = sqrt(z.q0*z.q0 + z.q1*z.q1 + z.q2*z.q2 + z.q3*z.q3)
-abs2(z::Quaternion)::Quaternion = z.q0*z.q0 + z.q1*z.q1 + z.q2*z.q2 + z.q3*z.q3
+abs(z::Quaternion) = sqrt(z.q0*z.q0 + z.q1*z.q1 + z.q2*z.q2 + z.q3*z.q3)
+abs2(z::Quaternion) = z.q0*z.q0 + z.q1*z.q1 + z.q2*z.q2 + z.q3*z.q3
 inv(z::Quaternion)::Quaternion = conj(z)/abs2(z)
 
 (-)(z::Quaternion)::Quaternion = Quaternion(-z.q0, -z.q1, -z.q2, -z.q3)
@@ -127,7 +127,6 @@ randn(r::AbstractRNG, ::Type{Quaternion{T}}) where T<:Real = quaternion(randn(r)
 real(::Type{Quaternion{T}}) where T<:Real = T
 quaternion(::Type{T}) where T<:Real = Quaternion{T}
 quaternion(::Type{Quaternion{T}}) where T<:Real = Quaternion{T}
-
 
 const jm = Quaternion(false,false,true,false)
 const km = Quaternion(false,false,false,true)
