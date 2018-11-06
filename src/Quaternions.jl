@@ -108,13 +108,13 @@ inv(z::Quaternion) = conj(z)/abs2(z)
 # element wise multiplication
 mul_ew(z1::Quaternion, z2::Quaternion)::Quaternion = Quaternion(z1.q0*z2.q0,z1.q1*z2.q1,z1.q2*z2.q2,z1.q3*z2.q3)
 (&)(z1::Quaternion, z2::Quaternion)::Quaternion = mul_ew(z1,z2)
-(&)(z::Quaternion, x::Real)::Quaternion = x*z
-(&)(z::Real, x::Quaternion)::Quaternion = x*z
+(&)(z::Quaternion, x::Real) = x*z
+(&)(z::Real, x::Quaternion) = x*z
 
-wedge(p::Quaternion,q::Quaternion)::Quaternion = (p*q-q*p)/2
-antiwedge(p::Quaternion,q::Quaternion)::Quaternion = (p*q+q*p)/2
-(⊻)(z1::Quaternion, z2::Quaternion)::Quaternion = wedge(z1,z2)
-(|)(z1::Quaternion, z2::Quaternion)::Quaternion = antiwedge(z1,z2)
+wedge(p::Quaternion,q::Quaternion) = (p*q-q*p)/2
+antiwedge(p::Quaternion,q::Quaternion) = (p*q+q*p)/2
+(⊻)(z1::Quaternion, z2::Quaternion) = wedge(z1,z2)
+(|)(z1::Quaternion, z2::Quaternion) = antiwedge(z1,z2)
 
 para(p, q::Quaternion) = (p - q*p*q)/2
 perp(p, q::Quaternion) = (p + q*p*q)/2
