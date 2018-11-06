@@ -88,18 +88,18 @@ for fn in (:imagi,:imagj,:imagk)
     end
 end
 
-conj(z::Quaternion)::Quaternion = Quaternion(z.q0, -z.q1, -z.q2, -z.q3)
+conj(z::Quaternion) = Quaternion(z.q0, -z.q1, -z.q2, -z.q3)
 abs(z::Quaternion) = sqrt(z.q0*z.q0 + z.q1*z.q1 + z.q2*z.q2 + z.q3*z.q3)
 abs2(z::Quaternion) = z.q0*z.q0 + z.q1*z.q1 + z.q2*z.q2 + z.q3*z.q3
-inv(z::Quaternion)::Quaternion = conj(z)/abs2(z)
+inv(z::Quaternion) = conj(z)/abs2(z)
 
-(-)(z::Quaternion)::Quaternion = Quaternion(-z.q0, -z.q1, -z.q2, -z.q3)
-(/)(z::Quaternion, x::Real)::Quaternion = Quaternion(z.q0/x, z.q1/x, z.q2/x, z.q3/x)
-(+)(z::Quaternion, w::Quaternion)::Quaternion = Quaternion(z.q0 + w.q0, z.q1 + w.q1,
+(-)(z::Quaternion) = Quaternion(-z.q0, -z.q1, -z.q2, -z.q3)
+(/)(z::Quaternion, x::Real) = Quaternion(z.q0/x, z.q1/x, z.q2/x, z.q3/x)
+(+)(z::Quaternion, w::Quaternion) = Quaternion(z.q0 + w.q0, z.q1 + w.q1,
                                                            z.q2 + w.q2, z.q3 + w.q3)
-(-)(z::Quaternion, w::Quaternion)::Quaternion = Quaternion(z.q0 - w.q0, z.q1 - w.q1,
+(-)(z::Quaternion, w::Quaternion) = Quaternion(z.q0 - w.q0, z.q1 - w.q1,
                                                            z.q2 - w.q2, z.q3 - w.q3)
-(*)(z::Quaternion, w::Quaternion)::Quaternion = Quaternion(z.q0*w.q0 - z.q1*w.q1 - z.q2*w.q2 - z.q3*w.q3,
+(*)(z::Quaternion, w::Quaternion) = Quaternion(z.q0*w.q0 - z.q1*w.q1 - z.q2*w.q2 - z.q3*w.q3,
                                                            z.q0*w.q1 + z.q1*w.q0 + z.q2*w.q3 - z.q3*w.q2,
                                                            z.q0*w.q2 - z.q1*w.q3 + z.q2*w.q0 + z.q3*w.q1,
                                                            z.q0*w.q3 + z.q1*w.q2 - z.q2*w.q1 + z.q3*w.q0)
