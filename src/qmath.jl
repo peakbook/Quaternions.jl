@@ -1,56 +1,56 @@
 import Base: exp, log, sqrt, ^
 import Base: cos, sin, tan, cosh, sinh, tanh, acos, asin, atan, acosh, asinh, atanh
 
-function exp(q::Quaternion)::Quaternion
+function exp(q::Quaternion)
     z = sqrt(q.q1*q.q1 + q.q2*q.q2 + q.q3*q.q3)
     return exp(q.q0)*(cos(z) + imag(q)*(z != zero(q.q0) ? sin(z)/z : one(q.q0)))
 end
 
-function log(q::Quaternion)::Quaternion
+function log(q::Quaternion)
     z = abs(imag(q))
     return log(abs(q)) + ((imag(q)!=zero(q)) ? imag(q)/z*atan2(z,q.q0) :
     q.q0 < zero(q.q0) ? quaternion(pi*im) : zero(q))
 end
 
-function cos(q::Quaternion)::Quaternion
+function cos(q::Quaternion)
     z = abs(imag(q))
     return cos(q.q0)*cosh(z)-imag(q)*sin(q.q0)*(z != zero(q.q0) ? sinh(z)/z : one(q.q0))
 end
 
-function sin(q::Quaternion)::Quaternion
+function sin(q::Quaternion)
     z = abs(imag(q))
     return sin(q.q0)*cosh(z)+imag(q)*cos(q.q0)*(z != zero(q.q0) ? sinh(z)/z : one(q.q0))
 end
 
-function tan(q::Quaternion)::Quaternion
+function tan(q::Quaternion)
     return sin(q)/cos(q)
 end
 
-function cosh(q::Quaternion)::Quaternion
+function cosh(q::Quaternion)
     return (exp(q)+exp(-q))/2
 end
 
-function sinh(q::Quaternion)::Quaternion
+function sinh(q::Quaternion)
     return (exp(q)-exp(-q))/2
 end
 
-function tanh(q::Quaternion)::Quaternion
+function tanh(q::Quaternion)
     return sinh(q)/cosh(q)
 end
 
-function sqrt(q::Quaternion)::Quaternion
+function sqrt(q::Quaternion)
     return exp(log(q)/2)
 end
 
-function (^)(q::Quaternion, p::AbstractFloat)::Quaternion
+function (^)(q::Quaternion, p::AbstractFloat)
     return exp(p*log(q))
 end
 
-function (^)(q::Quaternion, p::Quaternion)::Quaternion
+function (^)(q::Quaternion, p::Quaternion)
     return exp(p*log(q))
 end
 
-function acos(q::Quaternion)::Quaternion
+function acos(q::Quaternion)
     x = imag(q)
     y = abs(x)
     z = y!=zero(q.q0) ? x/y : quaternion(one(q.q0)*im)
@@ -59,7 +59,7 @@ function acos(q::Quaternion)::Quaternion
     # return -z*log(q - z*sqrt(one(q.q0) - q*q))
 end
 
-function asin(q::Quaternion)::Quaternion
+function asin(q::Quaternion)
     x = imag(q)
     y = abs(x)
     z = y!=zero(q.q0) ? x/y : quaternion(one(q.q0)*im)
@@ -68,7 +68,7 @@ function asin(q::Quaternion)::Quaternion
     #= return -z*log(z*q - sqrt(one(q.q0) - q*q)) =#
 end
 
-function atan(q::Quaternion)::Quaternion
+function atan(q::Quaternion)
     x = imag(q)
     y = abs(x)
     z = y!=zero(q.q0) ? x/y : quaternion(one(q.q0)*im)
