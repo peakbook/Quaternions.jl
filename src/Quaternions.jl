@@ -5,7 +5,7 @@ using Compat
 import Base: convert, promote_rule, show, real, imag, conj, abs, abs2, inv, rand, randn
 import Base: +, -, /, *, &, ⊻, |
 import Base: inv, float
-import Random: AbstractRNG
+import Random: AbstractRNG, SamplerType
 import LinearAlgebra: pinv
 
 export Quaternion, Quaternion256, Quaternion128, Quaternion64
@@ -119,10 +119,9 @@ antiwedge(p::Quaternion,q::Quaternion) = (p*q+q*p)/2
 para(p, q::Quaternion) = (p - q*p*q)/2
 perp(p, q::Quaternion) = (p + q*p*q)/2
 
-rand(::Type{Quaternion{T}}) where T<:Real = quaternion(rand(T),rand(T),rand(T),rand(T))
-randn(::Type{Quaternion{T}}) where T<:Real = quaternion(randn(),randn(),randn(),randn())
-rand(r::AbstractRNG, ::Type{Quaternion{T}}) where T<:Real = quaternion(rand(r, T), rand(r, T), rand(r, T), rand(r, T))
-randn(r::AbstractRNG, ::Type{Quaternion{T}}) where T<:Real = quaternion(randn(r), randn(r), randn(r), randn(r))
+rand(r::AbstractRNG, ::SamplerType{Quaternion{T}}) where {T<:Real} = quaternion(rand(r, T), rand(r, T), rand(r,T), rand(r,T))
+rand(rng::AbstractRNG, ::Type{Quaternion{T}}) where {T<:AbstractFloat} = Quaternion{T}(rand(rng, T), rand(rng, T), rand(rng,T), rand(rng,T))
+randn(rng::AbstractRNG, ::Type{Quaternion{T}}) where {T<:AbstractFloat} = Quaternion{T}(randn(rng, T), randn(rng, T), randn(rng,T), randn(rng,T))
 
 real(::Type{Quaternion{T}}) where T<:Real = T
 quaternion(::Type{T}) where T<:Real = Quaternion{T}
