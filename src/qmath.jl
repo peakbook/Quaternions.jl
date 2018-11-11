@@ -75,4 +75,3 @@ function atan(q::Quaternion)
 
     return -z*log((one(q.q0)+z*q)/(one(q.q0)-z*q))/2
 end
-
