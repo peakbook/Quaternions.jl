@@ -82,6 +82,8 @@ imagi(x::AbstractVector{T}) where T<:Real = zero(x)
 imagj(x::AbstractVector{T}) where T<:Real = zero(x)
 imagk(x::AbstractVector{T}) where T<:Real = zero(x)
 
+ispure(z::Quaternion)::Bool = iszero(z.q0)
+
 for fn in (:imagi,:imagj,:imagk)
     @eval begin
         ($fn)(A::AbstractArray) = map(($fn),A)
