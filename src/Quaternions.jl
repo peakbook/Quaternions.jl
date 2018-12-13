@@ -36,7 +36,7 @@ convert(::Type{Quaternion{T}}, x::Real) where T<:Real = Quaternion(convert(T,x))
 convert(::Type{Quaternion{T}}, z::Complex) where T<:Real = Quaternion(convert(Complex{T},z))
 convert(::Type{Quaternion{T}}, q::Quaternion) where T<:Real  = Quaternion{T}(convert(T,q.q0), convert(T,q.q1), convert(T,q.q2), convert(T,q.q3))
 convert(::Type{Quaternion{T}}, q::Quaternion{T}) where T<:Real = q
-convert(::Type{T}, q::Quaternion) where T<:Real = (iszero(q.q1) && iszero(q.q2) && iszero(q.q3)) ? convert(T,q.q0) : throw(InexactError()))
+convert(::Type{T}, q::Quaternion) where T<:Real = (iszero(q.q1) && iszero(q.q2) && iszero(q.q3)) ? convert(T,q.q0) : throw(InexactError())
 
 promote_rule(::Type{Quaternion{T}}, ::Type{T}) where T<:Real = Quaternion{T}
 promote_rule(::Type{Quaternion}, ::Type{T}) where T<:Real = Quaternion
