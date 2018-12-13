@@ -6,7 +6,7 @@ import Base: convert, promote_rule, show, real, imag, conj, abs, abs2, inv, rand
 import Base: +, -, /, *, &, ⊻, |
 import Base: inv, float
 import Random: AbstractRNG, SamplerType
-import LinearAlgebra: pinv
+import LinearAlgebra: pinv, norm
 
 export Quaternion, Quaternion256, Quaternion128, Quaternion64
 export quaternion, imagi, imagj, imagk, jm, km, ispure
