@@ -9,7 +9,7 @@ import Random: AbstractRNG, SamplerType
 import LinearAlgebra: pinv
 
 export Quaternion, Quaternion256, Quaternion128, Quaternion64
-export quaternion, imagi, imagj, imagk, jm, km
+export quaternion, imagi, imagj, imagk, jm, km, ispure
 export wedge, antiwedge, perp, para
 
 struct Quaternion{T<:Real} <: Number
