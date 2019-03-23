@@ -138,8 +138,8 @@ function equiv!(Y::AbstractArray{Complex{T}}, X::AbstractArray{Quaternion{T}}) w
     dtype = real(eltype(X))
     M = size(X,1)
     N = size(X,2)
-    Xr = reinterpret(dtype, X, (M<<2,N))
-    Yr = reinterpret(dtype, Y, (M<<2,N<<1))
+    Xr = reshape(reinterpret(dtype, X), (M<<2,N))
+    Yr = reshape(reinterpret(dtype, Y), (M<<2,N<<1))
 
     Yr[1:2:end>>1,1:end>>1] = Xr[1:4:end,:]
     Yr[2:2:end>>1,1:end>>1] = Xr[2:4:end,:]
@@ -154,7 +154,7 @@ function equiv!(Y::AbstractArray{Complex{T}}, X::AbstractArray{Quaternion{T}}) w
 end
 
 function equiv(X::AbstractArray{T}) where T<:Quaternion
-    Y = Array(Complex{real(eltype(X))}, (size(X,1)<<1, size(X,2)<<1))
+    Y = Array{Complex{real(eltype(X))}}(undef, size(X,1)<<1, size(X,2)<<1)
     return equiv!(Y, X)
 end
 
@@ -165,8 +165,8 @@ function equiv!(Y::AbstractArray{Quaternion{T}}, X::AbstractArray{Complex{T}}) w
     dtype = real(eltype(X))
     M = size(X,1)
     N = size(X,2)
-    Xr = reinterpret(dtype, X, (M<<1,N))
-    Yr = reinterpret(dtype, Y, (M<<1,N>>1))
+    Xr = reshape(reinterpret(dtype, X), (M<<1,N))
+    Yr = reshape(reinterpret(dtype, Y), (M<<1,N>>1))
 
     Yr[1:4:end,:] = Xr[1:2:end>>1,1:end>>1]
     Yr[2:4:end,:] = Xr[2:2:end>>1,1:end>>1]
@@ -177,7 +177,7 @@ function equiv!(Y::AbstractArray{Quaternion{T}}, X::AbstractArray{Complex{T}}) w
 end
 
 function equiv(X::AbstractArray{T}) where T<:Complex
-    Y = Array(Quaternion{real(eltype(X))}, (size(X,1)>>1, size(X,2)>>1))
+    Y = Array{Quaternion{real(eltype(X))}}(undef, size(X,1)>>1, size(X,2)>>1)
     return equiv!(Y, X)
 end
 
