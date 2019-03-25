@@ -7,7 +7,7 @@ import Base: inv, float
 import Random: AbstractRNG, SamplerType
 import LinearAlgebra: pinv, norm
 
-export Quaternion, Quaternion256, Quaternion128, Quaternion64
+export Quaternion, QuaternionF64, QuaternionF32, QuaternionF16
 export quaternion, imagi, imagj, imagk, jm, km, ispure
 export wedge, antiwedge, perp, para
 
@@ -25,9 +25,9 @@ Quaternion(x::Real) = Quaternion(x,zero(x),zero(x),zero(x))
 Quaternion(x::Irrational) = Quaternion(float(x))
 Quaternion(z::Complex) = Quaternion(real(z),imag(z),zero(real(z)),zero(real(z)))
 
-const Quaternion256 = Quaternion{Float64}
-const Quaternion128 = Quaternion{Float32}
-const Quaternion64 = Quaternion{Float16}
+const QuaternionF64 = Quaternion{Float64}
+const QuaternionF32 = Quaternion{Float32}
+const QuaternionF16 = Quaternion{Float16}
 
 convert(::Type{Quaternion}, x::Real) = Quaternion(x)
 convert(::Type{Quaternion}, z::Complex) = Quaternion(z)
