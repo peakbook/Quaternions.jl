@@ -120,9 +120,8 @@ antiwedge(p::Quaternion,q::Quaternion) = (p*q+q*p)/2
 para(p, q::Quaternion) = (p - q*p*q)/2
 perp(p, q::Quaternion) = (p + q*p*q)/2
 
-rand(r::AbstractRNG, ::SamplerType{Quaternion{T}}) where {T<:Real} = quaternion(rand(r, T), rand(r, T), rand(r,T), rand(r,T))
-rand(rng::AbstractRNG, ::Type{Quaternion{T}}) where {T<:AbstractFloat} = Quaternion{T}(rand(rng, T), rand(rng, T), rand(rng,T), rand(rng,T))
-randn(rng::AbstractRNG, ::Type{Quaternion{T}}) where {T<:AbstractFloat} = Quaternion{T}(randn(rng, T), randn(rng, T), randn(rng,T), randn(rng,T))
+rand(r::AbstractRNG, ::SamplerType{Quaternion{T}}) where {T<:Real} = Quaternion{T}(rand(r, T), rand(r, T), rand(r,T), rand(r,T))
+randn(r::AbstractRNG, ::Type{Quaternion{T}}) where {T<:AbstractFloat} = Quaternion{T}(0.5*randn(r, T), 0.5*randn(r, T), 0.5*randn(r,T), 0.5*randn(r,T))
 
 real(::Type{Quaternion{T}}) where T<:Real = T
 quaternion(::Type{T}) where T<:Real = Quaternion{T}
