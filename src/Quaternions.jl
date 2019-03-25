@@ -3,7 +3,8 @@ __precompile__()
 module Quaternions
 import Base: convert, promote_rule, show, real, imag, conj, abs, abs2, inv, rand, randn
 import Base: +, -, /, *, &, ⊻, |
-import Base: inv, float
+import Base: inv, float, isreal, isinteger, isfinite, isnan, isinf, iszero, isone
+
 import Random: AbstractRNG, SamplerType
 import LinearAlgebra: pinv, norm
 
@@ -189,5 +190,13 @@ for fn in (:pinv, :inv)
         end
     end
 end
+
+isreal(q::Quaternion) = iszero(imagi(q)) & iszero(imagj(q)) & iszero(imagk(q))
+isinteger(q::Quaternion) = isreal(q) & isinteger(real(q))
+isfinite(q::Quaternion) = isfinite(real(q)) & isfinite(imagi(q)) & isfinite(imagj(q)) & isfinite(imagk(q))
+isnan(q::Quaternion) = isnan(real(q)) | isnan(imagi(q)) | isnan(imagj(q)) | isnan(imagk(q))
+isinf(q::Quaternion) = isinf(real(q)) | isinf(imagi(q)) | isinf(imagj(q)) | isinf(imagk(q))
+iszero(q::Quaternion) = iszero(real(q)) & iszero(imagi(q)) & iszero(imagj(q)) & iszero(imagk(q))
+isone(q::Quaternion) = isone(real(q)) & iszero(imagi(q)) & iszero(imagj(q)) & iszero(imagk(q))
 
 end
