@@ -5,7 +5,7 @@ import Base: convert, promote_rule, show, real, imag, conj, abs, abs2, inv, rand
 import Base: +, -, /, *, &, ⊻, |
 import Base: inv, float, isreal, isinteger, isfinite, isnan, isinf, iszero, isone
 
-import Random: AbstractRNG, SamplerType
+import Random
 import LinearAlgebra: pinv, norm
 
 export Quaternion, QuaternionF64, QuaternionF32, QuaternionF16
@@ -121,8 +121,25 @@ antiwedge(p::Quaternion,q::Quaternion) = (p*q+q*p)/2
 para(p, q::Quaternion) = (p - q*p*q)/2
 perp(p, q::Quaternion) = (p + q*p*q)/2
 
-rand(r::AbstractRNG, ::SamplerType{Quaternion{T}}) where {T<:Real} = Quaternion{T}(rand(r, T), rand(r, T), rand(r,T), rand(r,T))
-randn(r::AbstractRNG, ::Type{Quaternion{T}}) where {T<:AbstractFloat} = Quaternion{T}(0.5*randn(r, T), 0.5*randn(r, T), 0.5*randn(r,T), 0.5*randn(r,T))
+#rand(r::Random.AbstractRNG, ::Random.SamplerType{Quaternion{T}}) where {T<:Real} = Quaternion(rand(r, T), rand(r, T), rand(r,T), rand(r,T))
+#randn(r::Random.AbstractRNG, ::Type{Quaternion{T}}) where {T<:AbstractFloat} = Quaternion(0.5*randn(r, T), 0.5*randn(r, T), 0.5*randn(r,T), 0.5*randn(r,T))
+function Base.rand(r::Random.AbstractRNG, ::Random.SamplerType{Quaternion{T}}) where {T <: Number}
+    # http://planning.cs.uiuc.edu/node198.html
+    # https://github.com/KieranWynn/pyquaternion/blob/master/pyquaternion/quaternion.py#L260
+    tau = 2.0 * pi
+    r1 = rand(r, T)
+    r2 = rand(r, T)
+    r3 = rand(r, T)
+    q1 = sqrt(one(T) - r1) * (sin(tau * r2))
+    q2 = sqrt(one(T) - r1) * (cos(tau * r2))
+    q3 = sqrt(r1)       * (sin(tau * r3))
+    q4 = sqrt(r1)       * (cos(tau * r3))
+    Quaternion(q1, q2, q3, q4)
+end
+
+function Base.randn(r::Random.AbstractRNG, ::Type{Quaternion{T}}) where {T <: Number}
+     Quaternion(randn(r, T), randn(r, T), randn(r, T), randn(r, T))*0.5
+end
 
 real(::Type{Quaternion{T}}) where T<:Real = T
 quaternion(::Type{T}) where T<:Real = Quaternion{T}
