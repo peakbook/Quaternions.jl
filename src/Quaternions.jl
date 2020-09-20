@@ -162,9 +162,9 @@ antiwedge(p::Quaternion,q::Quaternion) = (p*q+q*p)/2
 para(p, q::Quaternion) = (p - q*p*q)/2
 perp(p, q::Quaternion) = (p + q*p*q)/2
 
-#rand(r::Random.AbstractRNG, ::Random.SamplerType{Quaternion{T}}) where {T<:Real} = Quaternion(rand(r, T), rand(r, T), rand(r,T), rand(r,T))
+rand(r::Random.AbstractRNG, ::Random.SamplerType{Quaternion{T}}) where {T<:Integer} = Quaternion{T}(rand(r, T), rand(r, T), rand(r,T), rand(r,T))
 #randn(r::Random.AbstractRNG, ::Type{Quaternion{T}}) where {T<:AbstractFloat} = Quaternion(0.5*randn(r, T), 0.5*randn(r, T), 0.5*randn(r,T), 0.5*randn(r,T))
-function Base.rand(r::Random.AbstractRNG, ::Random.SamplerType{Quaternion{T}}) where {T <: Number}
+function Base.rand(r::Random.AbstractRNG, ::Random.SamplerType{Quaternion{T}}) where {T <: AbstractFloat}
     # http://planning.cs.uiuc.edu/node198.html
     # https://github.com/KieranWynn/pyquaternion/blob/master/pyquaternion/quaternion.py#L260
     tau = 2.0 * pi
@@ -175,11 +175,11 @@ function Base.rand(r::Random.AbstractRNG, ::Random.SamplerType{Quaternion{T}}) w
     q2 = sqrt(one(T) - r1) * (cos(tau * r2))
     q3 = sqrt(r1)       * (sin(tau * r3))
     q4 = sqrt(r1)       * (cos(tau * r3))
-    Quaternion(q1, q2, q3, q4)
+    Quaternion{T}(q1, q2, q3, q4)
 end
 
-function Base.randn(r::Random.AbstractRNG, ::Type{Quaternion{T}}) where {T <: Number}
-     Quaternion(randn(r, T), randn(r, T), randn(r, T), randn(r, T))*0.5
+function Base.randn(r::Random.AbstractRNG, ::Type{Quaternion{T}}) where {T <: AbstractFloat}
+    Quaternion{T}(randn(r, T), randn(r, T), randn(r, T), randn(r, T))*T(0.5)
 end
 
 real(::Type{Quaternion{T}}) where T<:Real = T
