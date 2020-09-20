@@ -8,7 +8,7 @@ end
 
 function log(q::Quaternion)
     z = abs(imag(q))
-    return log(abs(q)) + ((imag(q)!=zero(q)) ? imag(q)/z*atan2(z,q.q0) :
+    return log(abs(q)) + ((imag(q)!=zero(q)) ? imag(q)/z*atan(z,q.q0) :
     q.q0 < zero(q.q0) ? quaternion(pi*im) : zero(q))
 end
 

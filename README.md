@@ -1,5 +1,9 @@
 # Quaternions
 
+[![Build Status](https://travis-ci.org/peakbook/Quaternions.jl.svg?branch=master)](https://travis-ci.org/peakbook/Quaternions.jl)
+[![Coverage Status](https://coveralls.io/repos/peakbook/Quaternions.jl/badge.svg?branch=master&service=github)](https://coveralls.io/github/peakbook/Quaternions.jl?branch=master)
+[![codecov](https://codecov.io/gh/peakbook/Quaternions.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/peakbook/Quaternions.jl)
+
 Quaternion package for Julia
 
 A Julia module for Quaternions.
