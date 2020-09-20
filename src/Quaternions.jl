@@ -63,10 +63,36 @@ quaternion(x) = Quaternion(x)
 quaternion(z::Complex) = Quaternion(z)
 quaternion(q::Quaternion) = q
 
-function show(io::IO, z::Quaternion)
-    pm(z) = z < zero(z) ? " - $(-z)" : " + $z"
-    print(io, z.q0, pm(z.q1), "i", pm(z.q2), "j", pm(z.q3), "k")
+function show(io::IO, q::Quaternion)
+    compact = get(io, :compact, false)
+    show(io, q.q0)
+    p(i, unit) = begin
+        if signbit(i) && !isnan(i)
+            print(io, compact ? "-" : " - ")
+            if isa(i,Signed) && !isa(i,BigInt) && i == typemin(typeof(i))
+                show(io, -widen(i))
+            else
+                show(io, -i)
+            end
+        else
+            print(io, compact ? "+" : " + ")
+            show(io, i)
+        end
+        if !(isa(i,Integer) && !isa(i,Bool) || isa(i,AbstractFloat) && isfinite(i))
+            print(io, "*")
+        end
+        print(io, unit)
+    end
+    p(q.q1, "im")
+    p(q.q2, "jm")
+    p(q.q3, "km")
 end
+
+show(io::IO, q::Quaternion{Bool}) =
+    print(io, q == im ? "im" :
+              q == jm ? "jm" :
+              q == km ? "km" :
+          "Quaternion($(q.q0),$(q.q1),$(q.q2),$(q.q3))")
 
 function quaternion(A::Array{S}, B::Array{T}, C::Array{U}, D::Array{V}) where {S<:Real, T<:Real, U<:Real, V<:Real}
     if !(size(A)==size(B)==size(C)==size(D)); error("argument dimensions must match"); end
