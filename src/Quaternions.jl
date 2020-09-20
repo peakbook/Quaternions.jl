@@ -8,6 +8,7 @@ module Quaternions
 import Base: convert, promote_rule, show, real, imag, conj, abs, abs2, inv, rand, randn
 import Base: +, -, /, *, &, ⊻, |
 import Base: inv, float, isreal, isinteger, isfinite, isnan, isinf, iszero, isone
+import Base: widen
 
 import Random
 import LinearAlgebra: pinv, norm
@@ -63,6 +64,7 @@ quaternion(x) = Quaternion(x)
 quaternion(z::Complex) = Quaternion(z)
 quaternion(q::Quaternion) = q
 
+widen(::Type{Quaternion{T}}) where {T} = Quaternion{widen(T)}
 function show(io::IO, q::Quaternion)
     compact = get(io, :compact, false)
     show(io, q.q0)
@@ -133,6 +135,7 @@ abs(z::Quaternion) = sqrt(z.q0*z.q0 + z.q1*z.q1 + z.q2*z.q2 + z.q3*z.q3)
 abs2(z::Quaternion) = z.q0*z.q0 + z.q1*z.q1 + z.q2*z.q2 + z.q3*z.q3
 inv(z::Quaternion) = conj(z)/abs2(z)
 
+(+)(z::Quaternion) = Quaternion(+z.q0, +z.q1, +z.q2, +z.q3)
 (-)(z::Quaternion) = Quaternion(-z.q0, -z.q1, -z.q2, -z.q3)
 (/)(z::Quaternion, x::Real) = Quaternion(z.q0/x, z.q1/x, z.q2/x, z.q3/x)
 (+)(z::Quaternion, w::Quaternion) = Quaternion(z.q0 + w.q0, z.q1 + w.q1,
