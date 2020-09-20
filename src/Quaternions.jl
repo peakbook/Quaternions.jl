@@ -222,14 +222,14 @@ function equiv!(Y::AbstractArray{Complex{T}}, X::AbstractArray{Quaternion{T}}) w
     Xr = reshape(reinterpret(dtype, X), (M<<2,N))
     Yr = reshape(reinterpret(dtype, Y), (M<<2,N<<1))
 
-    Yr[1:2:end>>1,1:end>>1] = Xr[1:4:end,:]
-    Yr[2:2:end>>1,1:end>>1] = Xr[2:4:end,:]
-    Yr[1+end>>1:2:end,1+end>>1:end] = Xr[1:4:end,:]
-    Yr[2+end>>1:2:end,1+end>>1:end] = -Xr[2:4:end,:]
-    Yr[1:2:end>>1,1+end>>1:end] = Xr[3:4:end,:]
-    Yr[2:2:end>>1,1+end>>1:end] = Xr[4:4:end,:]
-    Yr[1+end>>1:2:end,1:end>>1] = -Xr[3:4:end,:]
-    Yr[2+end>>1:2:end,1:end>>1] = Xr[4:4:end,:]
+    @inbounds Yr[1:2:end>>1,1:end>>1] = @view(Xr[1:4:end,:])
+    @inbounds Yr[2:2:end>>1,1:end>>1] = @view(Xr[2:4:end,:])
+    @inbounds Yr[1+end>>1:2:end,1+end>>1:end] = @view(Xr[1:4:end,:])
+    @inbounds Yr[2+end>>1:2:end,1+end>>1:end] = -@view(Xr[2:4:end,:])
+    @inbounds Yr[1:2:end>>1,1+end>>1:end] = @view(Xr[3:4:end,:])
+    @inbounds Yr[2:2:end>>1,1+end>>1:end] = @view(Xr[4:4:end,:])
+    @inbounds Yr[1+end>>1:2:end,1:end>>1] = -@view(Xr[3:4:end,:])
+    @inbounds Yr[2+end>>1:2:end,1:end>>1] = @view(Xr[4:4:end,:])
 
     return Y
 end
@@ -249,10 +249,10 @@ function equiv!(Y::AbstractArray{Quaternion{T}}, X::AbstractArray{Complex{T}}) w
     Xr = reshape(reinterpret(dtype, X), (M<<1,N))
     Yr = reshape(reinterpret(dtype, Y), (M<<1,N>>1))
 
-    Yr[1:4:end,:] = Xr[1:2:end>>1,1:end>>1]
-    Yr[2:4:end,:] = Xr[2:2:end>>1,1:end>>1]
-    Yr[3:4:end,:] = Xr[1:2:end>>1,1+end>>1:end]
-    Yr[4:4:end,:] = Xr[2:2:end>>1,1+end>>1:end]
+    @inbounds Yr[1:4:end,:] = @view(Xr[1:2:end>>1,1:end>>1])
+    @inbounds Yr[2:4:end,:] = @view(Xr[2:2:end>>1,1:end>>1])
+    @inbounds Yr[3:4:end,:] = @view(Xr[1:2:end>>1,1+end>>1:end])
+    @inbounds Yr[4:4:end,:] = @view(Xr[2:2:end>>1,1+end>>1:end])
 
     return Y
 end
