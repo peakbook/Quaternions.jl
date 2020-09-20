@@ -1,5 +1,10 @@
 __precompile__()
+"""
+    Quaternions
 
+A package for quaternion arithmetic.
+
+"""
 module Quaternions
 import Base: convert, promote_rule, show, real, imag, conj, abs, abs2, inv, rand, randn
 import Base: +, -, /, *, &, ⊻, |
@@ -12,6 +17,14 @@ export Quaternion, QuaternionF64, QuaternionF32, QuaternionF16
 export quaternion, imagi, imagj, imagk, jm, km, ispure
 export wedge, antiwedge, perp, para
 
+"""
+    Quaternion{T<:Real} <: Number
+
+Quaternion number type with real and imaginary parts of type `T`.
+
+`QuaternionF16`, `QuaternionF32` and `QuaternionF64` are aliases for
+`Quaternion{Float16}`, `Quaternion{Float32}` and `Quaternion{Float64}` respectively.
+"""
 struct Quaternion{T<:Real} <: Number
     q0::T
     q1::T
@@ -145,7 +158,30 @@ real(::Type{Quaternion{T}}) where T<:Real = T
 quaternion(::Type{T}) where T<:Real = Quaternion{T}
 quaternion(::Type{Quaternion{T}}) where T<:Real = Quaternion{T}
 
+"""
+    jm
+
+The quaternion imaginary unit `j`.
+
+# Examples
+```jldoctest
+julia> jm * jm
+-1 + 0im + 0jm + 0km
+```
+"""
 const jm = Quaternion(false,false,true,false)
+
+"""
+    km
+
+The quaternion imaginary unit `k`.
+
+# Examples
+```jldoctest
+julia> km * km
+-1 + 0im + 0jm + 0km
+```
+"""
 const km = Quaternion(false,false,false,true)
 
 function equiv!(Y::AbstractArray{Complex{T}}, X::AbstractArray{Quaternion{T}}) where T<:Real
