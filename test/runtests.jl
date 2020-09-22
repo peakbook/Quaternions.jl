@@ -86,6 +86,18 @@ using LinearAlgebra
       @test acos(x) isa typeof(x)
       @test asin(x) isa typeof(x)
       @test atan(x) isa typeof(x)
+      @test norm(x) isa T
+    end
+    @test round(Quaternion(0.1, 0.1, 0.1, 0.1)) == Quaternion(0.0)
+    @test round(Quaternion(0.9, 0.9, 0.9, 0.9)) == Quaternion(1.0, 1.0, 1.0, 1.0)
+  end
+
+  @testset "type handling" begin
+    for T in (Int8, Int16, Int32, Int64, Int128)
+      @test float(Quaternion{T}) == Quaternion{float(T)}
+    end
+    for T in (QuaternionF16, QuaternionF32, QuaternionF64)
+      @test float(T) == T
     end
   end
 end

@@ -8,7 +8,7 @@ module Quaternions
 import Base: convert, promote_rule, show, real, imag, conj, abs, abs2, inv, rand, randn
 import Base: +, -, /, *, &, ⊻, |
 import Base: inv, float, isreal, isinteger, isfinite, isnan, isinf, iszero, isone
-import Base: widen
+import Base: widen, big, round
 
 import Random
 import LinearAlgebra: pinv, norm
@@ -65,6 +65,13 @@ quaternion(z::Complex) = Quaternion(z)
 quaternion(q::Quaternion) = q
 
 widen(::Type{Quaternion{T}}) where {T} = Quaternion{widen(T)}
+float(::Type{Quaternion{T}}) where {T<:AbstractFloat} = Quaternion{T}
+float(::Type{Quaternion{T}}) where {T} = Quaternion{float(T)}
+float(z::Quaternion{<:AbstractFloat}) = z
+float(z::Quaternion) = Quaternion(float(real(z)), float(imagi(z)), float(imagj(z)), float(imagk(z)))
+big(::Type{Quaternion{T}}) where {T<:Real} = Quaternion{big(T)}
+big(z::Quaternion{T}) where {T<:Real} = Quaternion{big(T)}(z)
+
 function show(io::IO, q::Quaternion)
     compact = get(io, :compact, false)
     show(io, q.q0)
@@ -106,8 +113,12 @@ function quaternion(A::Array{S}, B::Array{T}, C::Array{U}, D::Array{V}) where {S
 end
 
 quaternion(x::AbstractArray{T}) where T<:Quaternion = x
-quaternion(x::AbstractArray{T}) where T<:Complex = copy!(similar(x, Quaternion{real(eltype(x))}), x)
-quaternion(x::AbstractArray{T}) where T<:Real = copy!(similar(x, Quaternion{eltype(x)}), x)
+function quaternion(A::AbstractArray{T}) where T
+    if !isconcretetype(T)
+        error("`quaternion` not defined on abstractly-typed arrays; please convert to a more specific type")
+    end
+    convert(AbstractArray{typeof(quaternion(zero(T)))}, A)
+end
 
 real(z::Quaternion) = z.q0
 imagi(z::Quaternion) = z.q1
@@ -279,5 +290,13 @@ isnan(q::Quaternion) = isnan(real(q)) | isnan(imagi(q)) | isnan(imagj(q)) | isna
 isinf(q::Quaternion) = isinf(real(q)) | isinf(imagi(q)) | isinf(imagj(q)) | isinf(imagk(q))
 iszero(q::Quaternion) = iszero(real(q)) & iszero(imagi(q)) & iszero(imagj(q)) & iszero(imagk(q))
 isone(q::Quaternion) = isone(real(q)) & iszero(imagi(q)) & iszero(imagj(q)) & iszero(imagk(q))
+
+function round(z::Quaternion, rr::RoundingMode=RoundNearest,
+               ri::RoundingMode=rr, rj::RoundingMode=rr, rk::RoundingMode=rr; kwargs...)
+    Quaternion(round(real(z), rr; kwargs...),
+               round(imagi(z), ri; kwargs...),
+               round(imagj(z), rj; kwargs...),
+               round(imagk(z), rk; kwargs...))
+end
 
 end
